@@ -9,10 +9,10 @@ export const initConnection = () => {
     POSTGRES_HOST,
   } = process.env;
   const client = new Client({
-    user: POSTGRES_USER || 'postgres',
+    user: POSTGRES_USER || 'buldakov',
     host: POSTGRES_HOST || 'localhost',
-    database: POSTGRES_DB || 'postgres',
-    password: POSTGRES_PASSWORD || 'postgres',
+    database: POSTGRES_DB || 'buldakov',
+    password: POSTGRES_PASSWORD || 'buldakov',
     port: POSTGRES_PORT || 5556,
   });
 
@@ -23,8 +23,60 @@ export const createStructure = async () => {
   const client = initConnection();
   client.connect();
 
-  // Your code is here...
-  // Your code is here...
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS users(
+      id serial PRIMARY KEY,
+      username VARCHAR (30) UNIQUE NOT NULL,
+      date TIMESTAMP DEFAULT CURRENT_DATE
+    );
+  `);
+
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS categories(
+      id serail PRIMARY KEY,
+      name VARCHAR (30) UNIQUE NOT NULL
+    );
+  `);
+
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS authors(
+      id serail PRIMARY KEY,
+      name VARCHAR (30) UNIQUE NOT NULL
+    );
+  `);
+
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS books(
+      id serial PRIMARY KEY,
+      title VARCHAR (30) UNIQUE NOT NULL,
+      userid INTEGER NOT NULL,
+      authorid INTEGER NOT NULL,
+      categoryid INTEGER NOT NULL,
+      FOREIGN KEY (userid) REFERENCES users (id) ON DELETE CASCADE,
+      FOREIGN KEY (authorid) REFERENCES authors (id) ON DELETE CASCADE,
+      FOREIGN KEY (categoryid) REFERENCES categories (id) ON DELETE CASCADE
+    );
+  `);
+
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS descriptions(
+      id serial PRIMARY KEY,
+      description VARCHAR (10000) UNIQUE NOT NULL,
+      bookid INTEGER NOT NULL,
+      FOREIGN KEY (bookid) REFERENCES books (id) ON DELETE CASCADE
+    );
+  `);
+
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS reviews(
+      id serial PRIMARY KEY,
+      message VARCHAR (10000) NOT NULL,
+      userid INTEGER NOT NULL,
+      bookid INTEGER NOT NULL,
+      FOREIGN KEY (userid) REFERENCES users (id) ON DELETE CASCADE,
+      FOREIGN KEY (bookid) REFERENCES books (id) ON DELETE CASCADE
+    );
+  `);
 
   client.end();
 };
@@ -33,7 +85,29 @@ export const createItems = async () => {
   const client = initConnection();
   client.connect();
 
-  // Your code is here...
+  await client.query(`
+    INSERT INTO users(username) VALUES('userName');
+  `);
+
+  await client.query(`
+    INSERT INTO categories(name) VALUES('categoryName');
+  `);
+
+  await client.query(`
+    INSERT INTO authors(name) VALUES('authorsName');
+  `);
+
+  await client.query(`
+    INSERT INTO books(title, userid, authorid, categoryid) VALUES('hollyBible', 1, 1, 1);
+  `);
+
+  await client.query(`
+    INSERT INTO descriptions(description, bookid) VALUES('bookDescription', 1);
+  `);
+
+  await client.query(`
+    INSERT INTO reviews(message, userid, bookid) VALUES('reviewsMessage', 1, 1);
+  `);
 
   client.end();
 };

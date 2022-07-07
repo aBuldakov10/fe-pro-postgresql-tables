@@ -7,8 +7,8 @@ import {
 
 (async () => {
   console.log('start');
-  // await createStructure();
-  // await createItems();
-  // await dropTables();
+  await createStructure();
+  await createItems();
+  await dropTables();
   console.log('end');
 })();
