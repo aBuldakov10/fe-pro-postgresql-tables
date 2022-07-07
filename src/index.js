@@ -25,9 +25,9 @@ export const createStructure = async () => {
   client.connect();
 
   await client.query(`
-    CREATE TABLE users(
+    CREATE TABLE IF NOT EXISTS users(
       id SERIAL PRIMARY KEY,
-      username VARCHAR (30) UNIQUE NOT NULL,
+      name VARCHAR (30) UNIQUE NOT NULL,
       date TIMESTAMP DEFAULT CURRENT_DATE
     );
   `);
@@ -87,7 +87,7 @@ export const createItems = async () => {
   client.connect();
 
   await client.query(`
-    INSERT INTO users(username) VALUES('userName');
+    INSERT INTO users(name) VALUES('userName');
   `);
 
   await client.query(`
