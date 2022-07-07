@@ -13,8 +13,9 @@ export const initConnection = () => {
     host: POSTGRES_HOST || 'localhost',
     database: POSTGRES_DB || 'buldakov',
     password: POSTGRES_PASSWORD || 'buldakov',
-    port: POSTGRES_PORT || 5556,
+    port: POSTGRES_PORT || 5432,
   });
+
 
   return client;
 };
@@ -24,8 +25,8 @@ export const createStructure = async () => {
   client.connect();
 
   await client.query(`
-    CREATE TABLE IF NOT EXISTS users(
-      id serial PRIMARY KEY,
+    CREATE TABLE users(
+      id SERIAL PRIMARY KEY,
       username VARCHAR (30) UNIQUE NOT NULL,
       date TIMESTAMP DEFAULT CURRENT_DATE
     );
@@ -33,21 +34,21 @@ export const createStructure = async () => {
 
   await client.query(`
     CREATE TABLE IF NOT EXISTS categories(
-      id serail PRIMARY KEY,
+      id SERIAL PRIMARY KEY,
       name VARCHAR (30) UNIQUE NOT NULL
     );
   `);
 
   await client.query(`
     CREATE TABLE IF NOT EXISTS authors(
-      id serail PRIMARY KEY,
+      id SERIAL PRIMARY KEY,
       name VARCHAR (30) UNIQUE NOT NULL
     );
   `);
 
   await client.query(`
     CREATE TABLE IF NOT EXISTS books(
-      id serial PRIMARY KEY,
+      id SERIAL PRIMARY KEY,
       title VARCHAR (30) UNIQUE NOT NULL,
       userid INTEGER NOT NULL,
       authorid INTEGER NOT NULL,
@@ -60,7 +61,7 @@ export const createStructure = async () => {
 
   await client.query(`
     CREATE TABLE IF NOT EXISTS descriptions(
-      id serial PRIMARY KEY,
+      id SERIAL PRIMARY KEY,
       description VARCHAR (10000) UNIQUE NOT NULL,
       bookid INTEGER NOT NULL,
       FOREIGN KEY (bookid) REFERENCES books (id) ON DELETE CASCADE
@@ -69,7 +70,7 @@ export const createStructure = async () => {
 
   await client.query(`
     CREATE TABLE IF NOT EXISTS reviews(
-      id serial PRIMARY KEY,
+      id SERIAL PRIMARY KEY,
       message VARCHAR (10000) NOT NULL,
       userid INTEGER NOT NULL,
       bookid INTEGER NOT NULL,
